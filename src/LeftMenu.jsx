@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { withBlur, toast } from './util';
 
 
-const LeftMenu = memo(({ zoom, setZoom, invertCutSegments, setInvertCutSegments, toggleComfortZoom }) => {
+const LeftMenu = memo(({ zoom, setZoom, invertCutSegments, setInvertCutSegments, toggleComfortZoom,
+                         ffmpegExtraArgs, setFfmpegExtraArgs }) => {
   const { t } = useTranslation();
 
   function onYinYangClick() {
@@ -20,6 +21,10 @@ const LeftMenu = memo(({ zoom, setZoom, invertCutSegments, setInvertCutSegments,
   }
 
   const zoomOptions = Array(13).fill().map((unused, z) => 2 ** z);
+
+  const ffmpegExtraArgsInputStyle = {
+	  background: 'white', borderRadius: 5, color: 'rgba(0, 0, 0, 0.7)', fontSize: 13, padding: '1px 5px', marginTop: 0, marginBottom: 0, marginLeft: 5, marginRight: 5, border: 'none', boxSizing: 'border-box', fontFamily: 'inherit', width: 140, outline: 'none',
+    };
 
   return (
     <div className="no-user-select" style={{ padding: '.3em', display: 'flex', alignItems: 'center' }}>
@@ -45,6 +50,16 @@ const LeftMenu = memo(({ zoom, setZoom, invertCutSegments, setInvertCutSegments,
           <option key={val} value={String(val)}>{t('Zoom')} {val}x</option>
         ))}
       </Select>
+
+      <span style={{ paddingLeft: 30 }}>ffmpeg extra args</span>
+
+      <input
+        type="text"
+        style={{ ...ffmpegExtraArgsInputStyle }}
+        onChange={e => setFfmpegExtraArgs(e.target.value)}
+        value={ffmpegExtraArgs}
+      />
+
     </div>
   );
 });

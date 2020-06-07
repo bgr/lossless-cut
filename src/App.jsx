@@ -225,6 +225,8 @@ const App = memo(() => {
   useEffect(() => safeSetConfig('language', language), [language]);
   const [ffmpegExperimental, setFfmpegExperimental] = useState(configStore.get('ffmpegExperimental'));
   useEffect(() => safeSetConfig('ffmpegExperimental', ffmpegExperimental), [ffmpegExperimental]);
+  const [ffmpegExtraArgs, setFfmpegExtraArgs] = useState(configStore.get('ffmpegExtraArgs'));
+  useEffect(() => safeSetConfig('ffmpegExtraArgs', ffmpegExtraArgs), [ffmpegExtraArgs]);
 
   useEffect(() => {
     i18n.changeLanguage(language || fallbackLng).catch(console.error);
@@ -1013,6 +1015,7 @@ const App = memo(() => {
         appendFfmpegCommandLog,
         shortestFlag,
         ffmpegExperimental,
+        ffmpegExtraArgs,
       });
 
       if (outFiles.length > 1 && autoMerge) {
@@ -1064,7 +1067,7 @@ const App = memo(() => {
     working, duration, filePath, keyframeCut,
     autoMerge, customOutDir, fileFormat, haveInvalidSegs, copyFileStreams, numStreamsToCopy,
     exportExtraStreams, nonCopiedExtraStreams, outputDir, shortestFlag, isCustomFormatSelected,
-    fileFormatData, mainStreams, ffmpegExperimental,
+    fileFormatData, mainStreams, ffmpegExperimental, ffmpegExtraArgs,
   ]);
 
   const capture = useCallback(async () => {
@@ -2033,6 +2036,8 @@ const App = memo(() => {
             invertCutSegments={invertCutSegments}
             setInvertCutSegments={setInvertCutSegments}
             toggleComfortZoom={toggleComfortZoom}
+            ffmpegExtraArgs={ffmpegExtraArgs}
+            setFfmpegExtraArgs={setFfmpegExtraArgs}
           />
 
           <RightMenu

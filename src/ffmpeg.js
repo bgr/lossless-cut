@@ -206,7 +206,7 @@ function getMovFlags(outFormat) {
 }
 
 async function cut({
-  filePath, outFormat, cutFrom, cutTo, videoDuration, rotation, ffmpegExperimental,
+  filePath, outFormat, cutFrom, cutTo, videoDuration, rotation, ffmpegExperimental, ffmpegExtraArgs,
   onProgress, copyFileStreams, keyframeCut, outPath, appendFfmpegCommandLog, shortestFlag,
 }) {
   const cuttingStart = isCuttingStart(cutFrom);
@@ -244,7 +244,7 @@ async function cut({
 
     ...inputCutArgs,
 
-    '-c', 'copy',
+    ...(ffmpegExtraArgs.indexOf('-vf') !== -1 ? [] : ['-c', 'copy']),
 
     ...(shortestFlag ? ['-shortest'] : []),
 
@@ -260,6 +260,8 @@ async function cut({
     ...(ffmpegExperimental ? ['-strict', 'experimental'] : []),
 
     ...rotationArgs,
+
+    ...(ffmpegExtraArgs.trim().length > 0 ? ffmpegExtraArgs.split(' ') : []),
 
     '-f', outFormat, '-y', outPath,
   ];
@@ -285,7 +287,7 @@ function getOutFileExtension({ isCustomFormatSelected, outFormat, filePath }) {
 export async function cutMultiple({
   customOutDir, filePath, segments: segmentsUnsorted, videoDuration, rotation,
   onProgress, keyframeCut, copyFileStreams, outFormat, isCustomFormatSelected,
-  appendFfmpegCommandLog, shortestFlag, ffmpegExperimental,
+  appendFfmpegCommandLog, shortestFlag, ffmpegExperimental, ffmpegExtraArgs,
 }) {
   const segments = sortBy(segmentsUnsorted, 'cutFrom');
   const singleProgresses = {};
@@ -324,6 +326,7 @@ export async function cutMultiple({
       onProgress: progress => onSingleProgress(i, progress),
       appendFfmpegCommandLog,
       ffmpegExperimental,
+      ffmpegExtraArgs,
     });
 
     outFiles.push(outPath);
